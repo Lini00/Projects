@@ -1,0 +1,67 @@
+{% extends "auctions/layout.html" %}
+
+{% block body%}
+    {% if message %}
+        <div class="alert alert-primary" role="alert">
+            {{message}}
+        </div>
+    {% endif %}
+    <h1>{{item.title}} </h1>
+    {%if canclose and status%}
+        <a href="{%url 'close' item.id%}">Close</a>
+    {%endif%}
+    {%if status == False%}
+        <h3 class="text-danger">Auction Is Closed!</h3>
+    {%endif%}
+    {% if status == False and winner%}
+        <div class="alert alert-primary" role="alert">
+            You Have Won The Auction!
+        </div>
+    {% endif %}
+
+    <div class="float-center">
+        {%if there%}
+            <a href="{%url 'watch' item.id%}">Remove From Watchlist</a>
+        {%else%}
+            <a href="{%url 'watch' item.id%}">Add to Watchlist</a>
+        {%endif%}
+    </div>
+    <div class="vstack gap-3">
+        <img src="{{item.image}}" class="img-thumbnail" alt="Image Not Available" width="600" height="800">
+    </div>
+    <p>Description: <br> {{item.description}}</p>
+    <p>Category: {{item.category}}</p>
+    <p>Biding Price: {{item.startbid}}</p>
+    {% if user.is_authenticated and status%}
+        <form action = "{% url 'bidding' item.id%}" method = "post">
+            {% csrf_token%}
+            <div class="form-group">
+                <label for = "price">Price: </label>
+                <input type = "number" min="0" class = "form-control" name = "price" id = "price"  placeholder="Enter Your Bid here">
+            </div>
+            <input type="submit" class="btn btn-primary" value = "Bid"></input>
+        </form>
+    {%endif%}
+    {% if user.is_authenticated%}
+        <form action = "{% url 'newcomment' item.id%}" method = "post">
+            {% csrf_token%}
+             <div class="form-group">
+                <label for = "comment">Comment: </label>
+                <input type = "text" class = "form-control" name = "comment" id = "comment"  placeholder="Enter Your Comments If Any">
+            </div>
+            <input type="submit" class="btn btn-primary" value = "Submit"></input>
+        </form>
+    {%endif%}
+    <h4>Comments: </h4>
+    <div class="vstack gap-3">
+        {% if com%}
+            {%for c in com%}
+               <div class="bg-light border">
+                    <p>{{c.comment}}</p>
+                    <h6>By {{c.user}}</h6>
+                </div>
+                    
+            {%endfor%}
+        {%endif%}
+    </div>
+{% endblock %}

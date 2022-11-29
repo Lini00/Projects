@@ -1,0 +1,32 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2>Active Listings</h2>
+        <div>
+            <ul class="nav">
+                <h5>Search based on cateogry:</h5>
+                {%for cat in cateogries%}
+                    <li class="nav-item">
+                        <a class= "nav-link" href="{% url 'categories' cat.id%}">{{cat.Field}}</a> 
+                    </li>    
+                {%endfor%}
+            </ul>
+        </div>
+        {% for listing in auctions %}
+            <a href="{%url 'item' listing.id%}">
+                <div class="shadow p-3 mb-5 bg-body rounded">   
+                    <div class="row justify-content-start">
+                        <div class="col-4">
+                                <img src="{{listing.image}}" class="img-thumbnail" alt="Image Not Available" width="600" height="800">
+                        </div>
+                        <div class="col-4">
+                            <strong>{{listing.title}}</strong><br></a>
+                            Category : {{listing.category}}<br>
+                            Details : {{listing.description}}<br>
+                            Biding Price: {{listing.startbid}}
+                        </div>
+                    </div>
+                </div>
+            
+        {% endfor %}
+{% endblock %}
